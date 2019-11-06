@@ -27,10 +27,16 @@ namespace MeetTheTeacher.UI
             string[] ignoredNames = File.ReadAllLines(Path.Combine(pathToInputFiles, ignoredTeachersFileName), Encoding.UTF8);
 
             Controller ctrl = new Controller(teacherLines, detailLines);
-
-            throw new NotImplementedException("Ausgabe lt. Angabe (siehe Screenshots) implementieren!");
+            ctrl.DeleteIgnoredTeachers(ignoredNames);
 
             string html = ctrl.GetHtmlTable();
+
+            Console.WriteLine($"{ctrl.Count} Lehersätze eingelesen");
+            Console.WriteLine();
+            Console.WriteLine("Html-Ausgabe in Datei Sprechstunden.html:");
+            Console.WriteLine("-----------------------------------------");
+            Console.WriteLine(html);
+
             File.WriteAllText(Path.Combine(pathToOutputFiles, resultFileName), html, Encoding.Default);
         }
     }

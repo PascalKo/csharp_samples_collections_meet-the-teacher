@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Utils;
+using System.IO;
 
 namespace MeetTheTeacher.Logic
 {
@@ -17,17 +19,22 @@ namespace MeetTheTeacher.Logic
         /// </summary>
         public Controller(string[] teacherLines, string[] detailsLines)
         {
+            _teachers = new List<Teacher>();
+            _details = new Dictionary<string, int>();
+
+            InitDetails(detailsLines);
+            InitTeachers(teacherLines);
         }
 
-        public int Count => throw new NotImplementedException();
+        public int Count => _teachers.Count;
 
-        public int CountTeachersWithoutDetails => throw new NotImplementedException();
+        public int CountTeachersWithoutDetails => Count - CountTeachersWithDetails;
 
 
         /// <summary>
         /// Anzahl der Lehrer mit Detailinfos in der Liste
         /// </summary>
-        public int CountTeachersWithDetails => throw new NotImplementedException();
+        public int CountTeachersWithDetails => _details.Count;
 
         /// <summary>
         /// Aus dem Text der Sprechstundendatei werden alle Lehrersprechstunden 
@@ -37,7 +44,25 @@ namespace MeetTheTeacher.Logic
         /// <returns>Anzahl der eingelesenen Lehrer</returns>
         private void InitTeachers(string[] lines)
         {
-            throw new NotImplementedException();
+            foreach (string line in lines)
+            {
+                string[] parts = line.Split(";");
+
+                if (_details.ContainsKey(parts[0].ToLower()))
+                {
+                    int value;
+                    _details.TryGetValue(parts[0], out value);
+                    Teacher newTeacher = new TeacherWithDetail(parts[0], parts[1],
+                        parts[2], parts[3], parts[4], value);
+                    _teachers.Add(newTeacher);
+                }
+                else
+                {
+                    Teacher newTeacher = new Teacher(parts[0], parts[1], parts[2],
+                        parts[3], parts[4]);
+                    _teachers.Add(newTeacher);
+                }
+            }
         }
 
 
@@ -47,7 +72,16 @@ namespace MeetTheTeacher.Logic
         /// </summary>
         public void DeleteIgnoredTeachers(string[] names)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < names.Length; i++)
+            {
+                for (int j = 0; j < Count; j++)
+                {
+                    if (_teachers[j]._name.ToLower().Equals(names[i].ToLower()))
+                    {
+                        _teachers.RemoveAt(j);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -57,7 +91,17 @@ namespace MeetTheTeacher.Logic
         /// <returns>Index oder -1, falls nicht gefunden</returns>
         private int FindIndexForTeacher(string teacherName)
         {
-            throw new NotImplementedException();
+            int idx = 0;
+            bool isContained = false;
+            for (int i = 0; i < Count && isContained == false; i++)
+            {
+                if (_teachers[i]._name.ToLower().Equals(teacherName.ToLower()))
+                {
+                    idx = i;
+                    isContained = true;
+                }
+            }
+            return idx;
         }
 
 
@@ -67,7 +111,14 @@ namespace MeetTheTeacher.Logic
         /// </summary>
         private void InitDetails(string[] lines)
         {
-            throw new NotImplementedException();
+            foreach (var line in lines)
+            {
+                string[] parts = line.Split(";");
+                string name = parts[0].ToLower();
+                int id = Convert.ToInt32(parts[1]);
+                _details.Add(name, id);
+            }
+
         }
 
         /// <summary>
@@ -76,7 +127,24 @@ namespace MeetTheTeacher.Logic
         /// <returns>Text für die Html-Tabelle</returns>
         public string GetHtmlTable()
         {
-            throw new NotImplementedException();
+            _teachers.Sort();
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("<table id=\"tabelle\">");
+            sb.AppendLine();
+            sb.AppendLine("<tr>");
+            sb.AppendLine("<th align=\"center\">Name</th>");
+            sb.AppendLine("<th align=\"center\">Tag</th>");
+            sb.AppendLine("<th align=\"center\">Zeit</th>");
+            sb.AppendLine("<th align=\"center\">Raum</th>");
+            sb.AppendLine("</tr>");
+            sb.AppendLine();
+
+            foreach (Teacher teacher in _teachers)
+            {
+                sb.AppendLine(teacher.GetTeacherHtmlRow());
+            }
+            return sb.ToString();
         }
 
     }
