@@ -12,8 +12,8 @@ namespace MeetTheTeacher.Logic
     {
         public int _id;
 
-        public TeacherWithDetail(string name, string day, string room, string time, string remark,int id)
-            :base(name,day,room,time,remark)
+        public TeacherWithDetail(string name, string day, string unit, string time, string room, string remark, int id)
+            :base(name,day,unit,time,room,remark)
         {
             _id = id;
         }

@@ -53,13 +53,13 @@ namespace MeetTheTeacher.Logic
                     int value;
                     _details.TryGetValue(parts[0], out value);
                     Teacher newTeacher = new TeacherWithDetail(parts[0], parts[1],
-                        parts[2], parts[3], parts[4], value);
+                        parts[2], parts[3], parts[4],parts[5], value);
                     _teachers.Add(newTeacher);
                 }
                 else
                 {
                     Teacher newTeacher = new Teacher(parts[0], parts[1], parts[2],
-                        parts[3], parts[4]);
+                        parts[3], parts[4],parts[5]);
                     _teachers.Add(newTeacher);
                 }
             }

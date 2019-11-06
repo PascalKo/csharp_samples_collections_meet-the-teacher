@@ -13,16 +13,18 @@ namespace MeetTheTeacher.Logic
     {
         public string _name;
         public string _day;
-        public string _room;
+        public string _unit;
         public string _time;
+        public string _room;
         public string _remark;
 
-        public Teacher(string name,string day,string room,string time,string remark)
+        public Teacher(string name,string day,string unit,string time,string room,string remark)
         {
             _name = name;
             _day = day;
-            _room = room;
+            _unit = unit;
             _time = time;
+            _room = room;
             _remark = remark;
         }
 
